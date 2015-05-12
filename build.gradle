@@ -1,0 +1,29 @@
+apply plugin: 'java'
+
+
+uploadArchives {
+	repositories {
+		flatDir {
+		   dirs 'repos'
+		}
+	}
+}
+
+apply plugin: "sonar-runner"
+
+sonarRunner {
+    sonarProperties {
+        property "sonar.host.url", "http://localhost:9000"
+        property "sonar.jdbc.url", "jdbc:mysql://localhost:3306/sonar"
+        property "sonar.jdbc.driverClassName", "com.mysql.jdbc.Driver"
+        property "sonar.jdbc.username", "sonar"
+        property "sonar.jdbc.password", "sonar"
+	property "sonar.projectKey", "myKey"
+	property "sonar.projectName", "test2"
+	property "sonar.projectVersion", projectVersion
+    }
+}
+
+repositories {
+    mavenCentral()
+}
