@@ -9,6 +9,7 @@ public class Message {
 	private String reRight;
 	private String reWrong;
 	private String question;
+	private String resound;
 	
 	public Message(){
 		
@@ -20,6 +21,14 @@ public class Message {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	public String getResound() {
+		return resound;
+	}
+
+	public void setResound(String resound) {
+		this.resound = resound;
 	}
 
 	public String getImage() {

@@ -12,8 +12,17 @@ public class Database {
 	 * 서버 IP주소 jedis = new Jedis("IP주소", 포트 번호(6379), timeout);203.252.160.80
 	 */
 	
-	public Database(String ip){
+	public Database(){
+		
+	}
+	public boolean init(String ip){
 		jedis = new Jedis(ip, 6379, 100000000);
+		try{
+			jedis.exists("1:");
+			return true;
+		}catch(Exception e){
+			return false;
+		}
 	}
 	
 	/*
@@ -29,10 +38,13 @@ public class Database {
 		Random ran = new Random();
 		int temp = ran.nextInt(2)+1;
 		if(temp==1){
+			System.out.println("wordQuiz: "+jedis.llen("wordQuiz"));
 			int rNum = ran.nextInt(Ints.checkedCast(jedis.llen("wordQuiz")));
 			msg = gson.fromJson(jedis.get(jedis.lindex("wordQuiz", rNum)), Message.class);
 		}else{
+			System.out.println("engQuiz: "+jedis.llen("engQuiz"));
 			int rNum = ran.nextInt(Ints.checkedCast(jedis.llen("engQuiz")));
+			System.out.println(rNum);
 			msg = gson.fromJson(jedis.get(jedis.lindex("engQuiz", rNum)), Message.class);
 		}
 		return msg;
