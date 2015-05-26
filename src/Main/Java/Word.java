@@ -4,6 +4,7 @@ public class Word {
 	private String mean;
 	private String sound;
 	private String image;
+	public boolean isFromNaver = false;
 	
 	public Word(){
 		

@@ -22,7 +22,7 @@ public class User {
 		if(soundPath==null){
 			Process p = Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe \"http://www.howjsay.com/index.php?word="+str+"\"");
 			try {
-				Thread.sleep(20000);
+				Thread.sleep(25000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

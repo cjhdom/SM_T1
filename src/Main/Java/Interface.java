@@ -197,11 +197,9 @@ public class Interface extends JFrame{
 			public void keyPressed(KeyEvent e) {
 				
 				if(e.getKeyCode()==KeyEvent.VK_C){
-					System.out.println("child mode");
 					displayCM();
 				}
 				else if(e.getKeyCode()==KeyEvent.VK_P){
-					System.out.println("parent mode");
 					displayPM();
 				}
 			}
@@ -651,7 +649,7 @@ public class Interface extends JFrame{
 	 * 메시지가 단어 유형(type:2)일 경우, 단어, 뜻, 사진 자리에 각각을 출력해주는 함수
 	 */
 	public void setWordMsg(String path, String word, String mean){
-		wordMsgImage.setIcon(new ImageIcon(path));
+		if(path!=null) wordMsgImage.setIcon(new ImageIcon(path));
 		wordMsgLB.setText(word);
 		meanMsgLB.setText(mean);
 		msgTA.setEditable(true);
@@ -679,6 +677,7 @@ public class Interface extends JFrame{
 		if(type==1)	{
 			comMsgTA.setText(message);
 			child.setSoundPath(msg.getSound());
+			child.setStr(msg.getWord());
 			//단어유형일 경우
 			if(msg.getType().equals("1")){	
 				setWordMsg(msg.getImage(), msg.getWord(), msg.getMean());
@@ -803,7 +802,7 @@ public class Interface extends JFrame{
 		}else{
 			parent.setStr(word.getWord());
 			displayWord();
-			if(word.getImage()==null){
+			if(word.isFromNaver==true){
 				btnDelete.setEnabled(false);
 				btnAdd.setEnabled(true);
 			}else{
@@ -816,7 +815,7 @@ public class Interface extends JFrame{
 		/*
 		 * SHOWLIST 재실행 Sorting됨
 		 */
-		String[][] newTable= db.showList();
+		newTable= db.showList();
 		if(newTable==null) displayError("Can not find the LIST");
 		else{
 			wordList.setModel(new DefaultTableModel(newTable,
@@ -844,10 +843,12 @@ public class Interface extends JFrame{
 	}
 	public void deleteWord(){
 		if(!parent.deleteFromDB(word)) displayError("Can not delete the word");
+		btnDelete.setEnabled(false);
+		btnAdd.setEnabled(false);
 		/*
 		 * SHOWLIST 재실행 Sorting됨
 		 */
-		String[][] newTable= db.showList();
+		newTable= db.showList();
 		if(newTable==null) displayError("Can not find the LIST");
 		else{
 			wordList.setModel(new DefaultTableModel(newTable,
@@ -863,12 +864,15 @@ public class Interface extends JFrame{
 		}
 	}
 	public void addWord(){
-		System.out.println("addWord");
 		if(!parent.addtoList(word)) displayError("Can not add to LIST");
+		btnDelete.setEnabled(false);
+		btnAdd.setEnabled(false);
+		
 		/*
 		 * SHOWLIST 재실행 Sorting됨
 		 */
-		String[][] newTable= db.showList();
+		
+		newTable= db.showList();
 		if(newTable==null) displayError("Can not find the LIST");
 		else{
 			wordList.setModel(new DefaultTableModel(newTable,

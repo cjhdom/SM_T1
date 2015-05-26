@@ -22,20 +22,23 @@ public class Parent extends User{
 			this.word = db.searchByWord(buffer);
 			if(word.getWord()==null){
 				if(!findNaver(buffer)){
-					System.out.println("No result");
 					return null;
 				}
 			}else{
+				word.isFromNaver=false;
 				setSoundPath(word.getSound());
 			}
 			return word;
 		}else if(Pattern.matches("[°¡-ÆR]+", buffer)){
 			//ÀÔ·Â°ªÀÌ ÇÑ±ÛÀÏ ¶§ ¿¹¿ÜÃ³¸®
-			//this.word = db.searchByMean(buffer);
-			if(word.getWord()!=null) setSoundPath(word.getSound());
-			return null;
+			this.word = db.searchByMean(buffer);
+			if(word.getWord()!=null){
+				word.isFromNaver=false;
+				setSoundPath(word.getSound());
+				return word;
+			}
+			else return null;
 		}else{
-			System.out.println("ÀÔ·Â°ª ¿À·ù");
 			return null;
 		}
 	}
@@ -65,7 +68,7 @@ public class Parent extends User{
 				str = str.replaceAll("</b>", "");
 				word.setWord(buffer);
 				word.setMean(str);
-				
+				word.isFromNaver=true;
 				return true;
 			}
 			
