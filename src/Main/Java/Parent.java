@@ -66,6 +66,7 @@ public class Parent extends User{
 				str = cElement.getFirstChild().getNodeValue();
 				str = str.replaceAll("<b>", "");
 				str = str.replaceAll("</b>", "");
+				if(str.equalsIgnoreCase(buffer)) return false;
 				word.setWord(buffer);
 				word.setMean(str);
 				word.isFromNaver=true;

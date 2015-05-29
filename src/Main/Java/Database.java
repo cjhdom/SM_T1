@@ -7,7 +7,7 @@ import com.google.gson.*;
 
 public class Database {
 	private Jedis jedis;
-	
+	private int beforeMsg=-1;
 	/*
 	 * 서버 IP주소 jedis = new Jedis("IP주소", 포트 번호(6379), timeout);203.252.160.80
 	 */
@@ -38,15 +38,29 @@ public class Database {
 		Random ran = new Random();
 		int temp = ran.nextInt(2)+1;
 		if(temp==1){
-			int rNum = ran.nextInt(Ints.checkedCast(jedis.llen("wordQuiz")));
+			int rNum;
+			while(true){
+				rNum = ran.nextInt(Ints.checkedCast(jedis.llen("wordQuiz")));
+				if(rNum==beforeMsg);
+				else break;
+			}
 			msg = gson.fromJson(jedis.get(jedis.lindex("wordQuiz", rNum)), Message.class);
+			beforeMsg = rNum;
 		}else{
-			int rNum = ran.nextInt(Ints.checkedCast(jedis.llen("engQuiz")));
+			int rNum;
+			while(true){
+				rNum = ran.nextInt(Ints.checkedCast(jedis.llen("engQuiz")));
+				if(rNum==beforeMsg);
+				else break;
+			}
 			msg = gson.fromJson(jedis.get(jedis.lindex("engQuiz", rNum)), Message.class);
+			beforeMsg = rNum;
 		}
 		return msg;
 	}
-
+	/*
+	 * 영어 단어로 DB 검색
+	 */
 	public Word searchByWord(String str){
 		Word w=new Word();
 		try{
@@ -64,6 +78,9 @@ public class Database {
 			return w;
 		}
 	}
+	/*
+	 * 한글로 DB 검색
+	 */
 	public Word searchByMean(String str){
 		Word w = new Word();
 		try{
@@ -85,6 +102,10 @@ public class Database {
 			return w;
 		}
 	}
+	/*
+	 * Naver 에서 검색한 단어 추가
+	 * -> child mode 에서 단어 유형으로도 출제 가능
+	 */
 	public boolean insertWord(Word w){
 		try{
 			Gson gson = new Gson();
@@ -107,6 +128,10 @@ public class Database {
 		}
 		return true;
 	}
+	
+	/*
+	 * DB에서 단어와 메시지 Index 3개의 데이터 모두 삭제
+	 */
 	public boolean delWord(String word){
 		if(jedis.exists("1:"+word)){
 			jedis.del("1:"+word);

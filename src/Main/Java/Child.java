@@ -18,12 +18,9 @@ public class Child extends User{
 	}
 	public String checkMsg(String buffer){
 		if(msg.getAnswer().equalsIgnoreCase(buffer)){
-			try {
+			if(msg.getResound()!=null){
 				setSoundPath(msg.getResound());
 				displaySound();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 			return msg.getReRight();
 		}

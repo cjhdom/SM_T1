@@ -4,7 +4,9 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 
 
+import java.awt.FileDialog;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 
@@ -29,6 +31,8 @@ import java.util.Random;
 
 
 
+
+import java.util.Scanner;
 
 import javax.swing.table.*;
 
@@ -193,14 +197,17 @@ public class Interface extends JFrame{
 		
 		keyListen = new JTextField();
 		keyListen.addKeyListener(new KeyAdapter() {
+			String ch;
 			@Override
-			public void keyPressed(KeyEvent e) {
+			public void keyReleased(KeyEvent e) {
 				
 				if(e.getKeyCode()==KeyEvent.VK_C){
 					displayCM();
-				}
-				else if(e.getKeyCode()==KeyEvent.VK_P){
+				}else if(e.getKeyCode()==KeyEvent.VK_P){
 					displayPM();
+				}else if(e.getKeyCode()==KeyEvent.VK_ENTER){
+				}else{
+					displayError("C와 P중에서 입력해 주세요.(한/영 키 주의!)");
 				}
 			}
 		});
@@ -371,17 +378,28 @@ public class Interface extends JFrame{
 		soundBtn.setContentAreaFilled(false);
 		soundBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					child.displaySound();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					displayError("소리 파일을 재생할 수 없습니다.");
-				}
+				if(!child.displaySound()) displayError("소리 파일이 없습니다.");
 			}
 		});
 		soundBtn.setBounds(screenWidth/5+370, screenHeight/5+10, 35, 35);
 		childBG.add(soundBtn);
 		
+		try {
+			buttonIcon1 = ImageIO.read(new File("icon\\next.png"));
+		} catch (IOException e1) {
+			displayError("UI에러!");
+		}
+		JButton nextBtn = new JButton(new ImageIcon(buttonIcon1));
+		nextBtn.setBorder(BorderFactory.createEmptyBorder());
+		nextBtn.setContentAreaFilled(false);
+		nextBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				goNext();
+				keyListen.requestFocus();
+			}
+		});
+		nextBtn.setBounds(screenWidth/5*4-70, screenHeight/5, 70, 70);
+		childBG.add(nextBtn);
 		
 		
 		/*
@@ -405,8 +423,12 @@ public class Interface extends JFrame{
 		keyListen = new JTextField();
 		keyListen.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyPressed(KeyEvent e) {
+			public void keyReleased(KeyEvent e) {
 				if(e.getKeyCode()==KeyEvent.VK_BACK_SPACE){
+					selectBtn1.setEnabled(true);
+					selectBtn2.setEnabled(true);
+					selectBtn3.setEnabled(true);
+					selectBtn4.setEnabled(true);
 					cancelMsg();
 				}
 				if(e.getKeyCode()==KeyEvent.VK_LEFT){
@@ -415,36 +437,50 @@ public class Interface extends JFrame{
 				if(e.getKeyCode()==KeyEvent.VK_ENTER){
 					sendMsg();
 					msgTA.setText("");
+					selectBtn1.setEnabled(true);
+					selectBtn2.setEnabled(true);
+					selectBtn3.setEnabled(true);
+					selectBtn4.setEnabled(true);
 				}
 				if(e.getKeyCode()==KeyEvent.VK_1){
-					msgTA.append(selectBtn1.getText());
+					if(selectBtn1.isEnabled()){
+						msgTA.append(selectBtn1.getText());
+						selectBtn1.setEnabled(false);
+					}
 					keyListen.requestFocus();
 				}
 				if(e.getKeyCode()==KeyEvent.VK_2){
-					msgTA.append(selectBtn2.getText());
+					if(selectBtn2.isEnabled()){
+						msgTA.append(selectBtn2.getText());
+						selectBtn2.setEnabled(false);
+					}
 					keyListen.requestFocus();
 				}
 				if(e.getKeyCode()==KeyEvent.VK_3){
-					msgTA.append(selectBtn3.getText());
+					if(selectBtn3.isEnabled()){
+						msgTA.append(selectBtn3.getText());
+						selectBtn3.setEnabled(false);
+					}
 					keyListen.requestFocus();
 				}
 				if(e.getKeyCode()==KeyEvent.VK_4){
 					if(flag==4){
-						msgTA.append(selectBtn4.getText());
+						if(selectBtn4.isEnabled()){
+							msgTA.append(selectBtn4.getText());
+							selectBtn4.setEnabled(false);
+						}
 					}
 					keyListen.requestFocus();
 				}
 				if(e.getKeyCode()==KeyEvent.VK_0){
-					try {
-						child.displaySound();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						displayError("소리 파일을 재생할 수 없습니다.");
-						
-					}
+					if(!child.displaySound()) displayError("소리 파일이 없습니다.");
 					keyListen.requestFocus();
 				}
 				if(e.getKeyCode()==KeyEvent.VK_RIGHT){
+					selectBtn1.setEnabled(true);
+					selectBtn2.setEnabled(true);
+					selectBtn3.setEnabled(true);
+					selectBtn4.setEnabled(true);
 					goNext();
 					keyListen.requestFocus();
 				}
@@ -522,7 +558,7 @@ public class Interface extends JFrame{
 		searchTF.setColumns(10);
 		searchTF.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyPressed(KeyEvent e) {
+			public void keyReleased(KeyEvent e) {
 				if(e.getKeyCode()==KeyEvent.VK_ENTER){
 					findWord();
 					searchTF.requestFocus();
@@ -570,13 +606,8 @@ public class Interface extends JFrame{
 		soundBtn2.setContentAreaFilled(false);
 		soundBtn2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					parent.displaySound();
-					searchTF.requestFocus();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					displayError("소리 파일을 찾을 수 없습니다.");
-				}
+				if(!parent.displaySound()) displayError("소리 파일이 없습니다.");
+				searchTF.requestFocus();
 			}
 		});
 		soundBtn2.setBounds(screenWidth/2+330, screenHeight/2-133, 35, 35);
@@ -586,6 +617,20 @@ public class Interface extends JFrame{
 		btnAdd = new JButton("ADD");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(JOptionPane.showConfirmDialog(null, "296*132 사진을 추가하겠습니까?", "", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)==JOptionPane.YES_OPTION){
+					FileDialog fd = new FileDialog((Frame)null, "Test", FileDialog.LOAD);
+	                fd.setFile("*.png");
+					fd.setVisible(true);
+	                if(fd.getDirectory()!=null&&fd.getFile()!=null) word.setImage(fd.getDirectory()+fd.getFile());
+	                else displayError("사진 추가 취소");
+	                if(JOptionPane.showConfirmDialog(null, "Sound를 추가하겠습니까?", "", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)==JOptionPane.YES_OPTION){
+						FileDialog fd2 = new FileDialog((Frame)null, "Test", FileDialog.LOAD);
+		                fd2.setFile("*.wav");
+						fd2.setVisible(true);
+		                if(fd2.getDirectory()!=null&&fd2.getFile()!=null) word.setSound(fd2.getDirectory()+fd2.getFile());
+		                else displayError("소리 추가 취소");
+					}
+				}
 				addWord();
 				searchTF.requestFocus();
 			}
@@ -710,12 +755,7 @@ public class Interface extends JFrame{
 					}				
 				}
 			}
-			try {
-				child.displaySound();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				displayError("displaySound() error!");
-			}			
+			if(!child.displaySound()) displayError("소리 파일이 없습니다.");		
 		}
 		else if(type==2) {
 			userMsgTA.setText(message);
@@ -919,7 +959,9 @@ public class Interface extends JFrame{
 		
 	}
 	public void displayError(String str){
+		
 		JOptionPane.showMessageDialog(null, str);
+		
 	}
 }
 

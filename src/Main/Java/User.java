@@ -18,9 +18,9 @@ public class User {
 		this.str = str;
 	}
 	
-	public void displaySound() throws IOException{
+	public boolean displaySound(){
 		if(soundPath==null){
-			Process p = Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe \"http://www.howjsay.com/index.php?word="+str+"\"");
+			/*Process p = Runtime.getRuntime().exec("C:\\Program Files\\Internet Explorer\\iexplore.exe \"http://www.howjsay.com/index.php?word="+str+"\"");
 			try {
 				Thread.sleep(25000);
 			} catch (InterruptedException e) {
@@ -28,11 +28,21 @@ public class User {
 				e.printStackTrace();
 			}
 			p.destroy();
+			*/
+			return false;
 		}
 		else{
-			InputStream in = new FileInputStream(soundPath);
-	        AudioStream as =    new AudioStream(in);
-	        AudioPlayer.player.start(as);
+			try {
+				InputStream in;
+				in = new FileInputStream(soundPath);
+				AudioStream as = new AudioStream(in);
+				AudioPlayer.player.start(as);
+			} catch (FileNotFoundException e) {
+				return false;
+			} catch(IOException e){
+				return false;
+			}
+	        return true;
 		}
 	
 	}
