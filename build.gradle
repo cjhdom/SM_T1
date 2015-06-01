@@ -15,13 +15,13 @@ apply plugin: "sonar-runner"
 
 sonarRunner {
     sonarProperties {
-        property "sonar.host.url", "http://203.252.160.90:9000"
-        property "sonar.jdbc.url", "jdbc:mysql://203.252.160.90:3306/sonar"
+        property "sonar.host.url", "http://localhost:9000"
+        property "sonar.jdbc.url", "jdbc:mysql://localhost:3306/sonar"
         property "sonar.jdbc.driverClassName", "com.mysql.jdbc.Driver"
         property "sonar.jdbc.username", "sonar"
         property "sonar.jdbc.password", "sonar"
-	property "sonar.projectKey", "myKey"
-	property "sonar.projectName", "test2"
+	property "sonar.projectKey", "smt1"
+	property "sonar.projectName", "smt1"
 	property "sonar.projectVersion", projectVersion
     }
 }
@@ -34,5 +34,6 @@ dependencies {
 	compile 'redis.clients:jedis:1.5.0'
 	compile 'com.google.code.gson:gson:1.7.2'
 	compile 'com.google.guava:guava:18.0'
+	testCompile 'junit:junit:4.12'
 }
 
